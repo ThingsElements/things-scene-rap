@@ -156,4 +156,4 @@ exports.default = RAP;
 
 Component.register('rap', RAP);
 
-},{}]},{},[1,2]);
+},{}]},{},[1]);
