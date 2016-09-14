@@ -108,4 +108,6 @@ export default class RAP extends Polyline {
 
 }
 
-Component.register('rap', RAP)
+Component.intercept(RAP.prototype, 'controls', false);
+
+Component.register('rap', RAP);
