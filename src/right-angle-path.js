@@ -79,6 +79,10 @@ export default class RAP extends Polyline {
     return result;
   }
 
+  get pathExtendable() {
+    return true;
+  }
+
   get controls() {
 
     // 폴리라인에서의 control은 새로운 path를 추가하는 포인트이다.
@@ -108,6 +112,6 @@ export default class RAP extends Polyline {
 
 }
 
-Component.intercept(RAP.prototype, 'controls', false);
+Component.memoize(RAP.prototype, 'controls', false);
 
 Component.register('rap', RAP);

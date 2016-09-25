@@ -118,6 +118,11 @@ var RAP = function (_Polyline) {
       return result;
     }
   }, {
+    key: 'pathExtendable',
+    get: function get() {
+      return true;
+    }
+  }, {
     key: 'controls',
     get: function get() {
 
@@ -153,6 +158,8 @@ var RAP = function (_Polyline) {
 
 exports.default = RAP;
 
+
+Component.memoize(RAP.prototype, 'controls', false);
 
 Component.register('rap', RAP);
 
