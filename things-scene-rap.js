@@ -31,10 +31,24 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _scene = scene;
-var Component = _scene.Component;
-var Polyline = _scene.Polyline;
+var _scene = scene,
+    Component = _scene.Component,
+    Polyline = _scene.Polyline;
 
+
+var NATURE = {
+  mutable: false,
+  resizable: true,
+  rotatable: true,
+  properties: [{
+    type: 'select',
+    label: 'direction',
+    name: 'direction',
+    property: {
+      options: ['h', 'w']
+    }
+  }]
+};
 
 var controlHandler = {
 
@@ -61,18 +75,18 @@ var RAP = function (_Polyline) {
   function RAP() {
     _classCallCheck(this, RAP);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(RAP).apply(this, arguments));
+    return _possibleConstructorReturn(this, (RAP.__proto__ || Object.getPrototypeOf(RAP)).apply(this, arguments));
   }
 
   _createClass(RAP, [{
     key: '_draw',
     value: function _draw(ctx) {
-      var _model = this.model;
-      var _model$alpha = _model.alpha;
-      var alpha = _model$alpha === undefined ? 1 : _model$alpha;
-      var _model$path = _model.path;
-      var path = _model$path === undefined ? [] : _model$path;
-      var direction = _model.direction;
+      var _model = this.model,
+          _model$alpha = _model.alpha,
+          alpha = _model$alpha === undefined ? 1 : _model$alpha,
+          _model$path = _model.path,
+          path = _model$path === undefined ? [] : _model$path,
+          direction = _model.direction;
 
 
       if (path.length <= 1) return;
@@ -94,9 +108,9 @@ var RAP = function (_Polyline) {
   }, {
     key: 'contains',
     value: function contains(x, y) {
-      var _model2 = this.model;
-      var path = _model2.path;
-      var direction = _model2.direction;
+      var _model2 = this.model,
+          path = _model2.path,
+          direction = _model2.direction;
 
       var result = false;
 
@@ -127,10 +141,10 @@ var RAP = function (_Polyline) {
     get: function get() {
 
       // 폴리라인에서의 control은 새로운 path를 추가하는 포인트이다.
-      var _model3 = this.model;
-      var _model3$path = _model3.path;
-      var path = _model3$path === undefined ? [] : _model3$path;
-      var direction = _model3.direction;
+      var _model3 = this.model,
+          _model3$path = _model3.path,
+          path = _model3$path === undefined ? [] : _model3$path,
+          direction = _model3.direction;
 
       var controls = [];
 
@@ -150,6 +164,11 @@ var RAP = function (_Polyline) {
       }
 
       return controls;
+    }
+  }, {
+    key: 'nature',
+    get: function get() {
+      return NATURE;
     }
   }]);
 

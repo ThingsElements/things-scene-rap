@@ -1,5 +1,19 @@
 var { Component, Polyline } = scene
 
+const NATURE = {
+  mutable: false,
+  resizable: true,
+  rotatable: true,
+  properties : [{
+    type: 'select',
+    label: 'direction',
+    name: 'direction',
+    property: {
+      options: ['h', 'w']
+    }
+  }]
+}
+
 var controlHandler = {
 
   ondragstart: function(point, index, component) {
@@ -108,6 +122,10 @@ export default class RAP extends Polyline {
     }
 
     return controls
+  }
+
+  get nature(){
+    return NATURE
   }
 
 }
