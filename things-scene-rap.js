@@ -53,16 +53,14 @@ var NATURE = {
 var controlHandler = {
 
   ondragstart: function ondragstart(point, index, component) {
-
     component.mutatePath(null, function (path) {
-      path.splice(index + 1, 0, point); // array.insert(index, point) 의 의미임.
+      path.splice(Math.floor(index / 2) + 1, 0, point); // array.insert(index, point) 의 의미임.
     });
   },
 
   ondragmove: function ondragmove(point, index, component) {
-
     component.mutatePath(null, function (path) {
-      path[index + 1] = point;
+      path[Math.floor(index / 2) + 1] = point;
     });
   },
 
@@ -152,15 +150,29 @@ var RAP = function (_Polyline) {
         var p1 = path[i];
         var p2 = path[i + 1];
 
-        if (direction == 'h') controls.push({
-          x: path[i + 1].x,
-          y: path[i].y,
-          handler: controlHandler
-        });else controls.push({
-          x: path[i].x,
-          y: path[i + 1].y,
-          handler: controlHandler
-        });
+        if (direction == 'h') {
+          controls.push({
+            x: path[i + 1].x - (path[i + 1].x - path[i].x) / 2,
+            y: path[i].y,
+            handler: controlHandler
+          });
+          controls.push({
+            x: path[i + 1].x,
+            y: path[i].y + (path[i + 1].y - path[i].y) / 2,
+            handler: controlHandler
+          });
+        } else {
+          controls.push({
+            x: path[i].x + (path[i + 1].x - path[i].x) / 2,
+            y: path[i + 1].y,
+            handler: controlHandler
+          });
+          controls.push({
+            x: path[i].x,
+            y: path[i + 1].y - (path[i + 1].y - path[i].y) / 2,
+            handler: controlHandler
+          });
+        }
       }
 
       return controls;
