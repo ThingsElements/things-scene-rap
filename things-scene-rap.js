@@ -84,8 +84,38 @@ var RAP = function (_Polyline) {
           alpha = _model$alpha === undefined ? 1 : _model$alpha,
           _model$path = _model.path,
           path = _model$path === undefined ? [] : _model$path,
-          direction = _model.direction;
+          direction = _model.direction,
+          _model$begin = _model.begin,
+          begin = _model$begin === undefined ? 'oval' : _model$begin,
+          _model$end = _model.end,
+          end = _model$end === undefined ? 'oval' : _model$end,
+          _model$beginSize = _model.beginSize,
+          beginSize = _model$beginSize === undefined ? 'size5' : _model$beginSize,
+          _model$endSize = _model.endSize,
+          endSize = _model$endSize === undefined ? 'size5' : _model$endSize,
+          _model$lineWidth = _model.lineWidth,
+          lineWidth = _model$lineWidth === undefined ? 2 : _model$lineWidth,
+          _model$lineCap = _model.lineCap,
+          lineCap = _model$lineCap === undefined ? false : _model$lineCap,
+          _model$strokeStyle = _model.strokeStyle,
+          strokeStyle = _model$strokeStyle === undefined ? '#000' : _model$strokeStyle;
 
+      // 양 끝 라인 그리기.
+
+      if (begin != 'none' || end != 'none') {
+
+        beginSize = this.sizes(beginSize);
+        endSize = this.sizes(endSize);
+
+        lineWidth = parseInt(lineWidth);
+        ctx.lineCap = lineCap;
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = strokeStyle;
+        ctx.fillStyle = strokeStyle;
+        ctx.globalAlpha = alpha;
+
+        this._drawEndPoint(ctx, path[0].x, path[0].y, path[path.length - 1].x, path[path.length - 1].y, lineWidth, begin, end, beginSize, endSize);
+      }
 
       if (path.length <= 1) return;
 
@@ -128,6 +158,120 @@ var RAP = function (_Polyline) {
       });
 
       return result;
+    }
+  }, {
+    key: 'isLine',
+    value: function isLine() {
+      return true;
+    }
+  }, {
+    key: '_drawEndPoint',
+    value: function _drawEndPoint(ctx, x1, y1, x2, y2, lineWidth, beginType, endType, beginSize, endSize) {
+      var theta = Math.atan2(y2 - y1, x2 - x1);
+
+      if (beginType) this._drawArrow(ctx, beginType, x1, y1, theta, lineWidth, beginSize);
+
+      if (endType) this._drawArrow(ctx, endType, x2, y2, theta + Math.PI, lineWidth, endSize);
+    }
+  }, {
+    key: '_drawArrow',
+    value: function _drawArrow(ctx, type, x, y, theta, lineWidth, size) {
+
+      ctx.beginPath();
+
+      ctx.translate(x, y);
+      ctx.rotate(theta);
+
+      switch (type) {
+        case 'oval':
+          ctx.ellipse(0, 0, size.X, size.Y, 0, 0, 2 * Math.PI);
+          ctx.fill();
+          // ctx.scale(1, 1 / arc_scale_y)
+          break;
+        case 'diamond':
+          ctx.moveTo(-size.X, 0);
+          ctx.lineTo(0, -size.Y);
+          ctx.lineTo(size.X, 0);
+          ctx.lineTo(0, size.Y);
+          ctx.fill();
+          break;
+        case 'arrow':
+          ctx.moveTo(0, 0);
+          ctx.lineTo(WING_FACTOR * size.X, -size.Y);
+          ctx.lineTo(WING_FACTOR * size.X, size.Y);
+          ctx.fill();
+          break;
+        case 'sharp-arrow':
+          ctx.moveTo(0, 0);
+          ctx.lineTo(WING_FACTOR * size.X, -size.Y);
+          ctx.lineTo(-size.X / 1.5 + WING_FACTOR * size.X, 0);
+          ctx.lineTo(WING_FACTOR * size.X, size.Y);
+          ctx.fill();
+          break;
+        case 'open-arrow':
+          ctx.moveTo(WING_FACTOR * size.X + lineWidth, -size.Y);
+          ctx.lineTo(lineWidth, 0);
+          ctx.lineTo(WING_FACTOR * size.X + lineWidth, size.Y);
+          ctx.stroke();
+          break;
+        default:
+          break;
+      }
+
+      ctx.rotate(-theta);
+      ctx.translate(-x, -y);
+
+      ctx.closePath();
+    }
+  }, {
+    key: 'sizes',
+    value: function sizes(size) {
+      var length = {};
+      var lineWidth = this.model.lineWidth * 1.2;
+
+      switch (size) {
+        case 'size1':
+          length.X = lineWidth;
+          length.Y = lineWidth;
+          break;
+        case 'size2':
+          length.X = lineWidth * 1.5;
+          length.Y = lineWidth;
+          break;
+        case 'size3':
+          length.X = lineWidth * 2;
+          length.Y = lineWidth;
+          break;
+        case 'size4':
+          length.X = lineWidth;
+          length.Y = lineWidth * 1.5;
+          break;
+        case 'size5':
+          length.X = lineWidth * 1.5;
+          length.Y = lineWidth * 1.5;
+          break;
+        case 'size6':
+          length.X = lineWidth * 2;
+          length.Y = lineWidth * 1.5;
+          break;
+        case 'size7':
+          length.X = lineWidth;
+          length.Y = lineWidth * 2;
+          break;
+        case 'size8':
+          length.X = lineWidth * 1.5;
+          length.Y = lineWidth * 2;
+          break;
+        case 'size9':
+          length.X = lineWidth * 2;
+          length.Y = lineWidth * 2;
+          break;
+        default:
+          length.X = lineWidth * 1.5;
+          length.Y = lineWidth * 1.5;
+          break;
+      }
+      return length;
     }
   }, {
     key: 'pathExtendable',
