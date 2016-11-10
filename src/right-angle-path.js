@@ -50,20 +50,20 @@ export default class RAP extends Polyline {
     } = this.model;
 
     // 양 끝 라인 그리기.
-    if(begin != 'none' || end != 'none'){
-
-      beginSize = this.sizes(beginSize)
-      endSize = this.sizes(endSize)
-
-      lineWidth = parseInt(lineWidth)
-      ctx.lineCap = lineCap;
-      ctx.lineWidth = lineWidth
-      ctx.strokeStyle = strokeStyle
-      ctx.fillStyle = strokeStyle
-      ctx.globalAlpha = alpha
-
-      this._drawEndPoint(ctx, path[0].x, path[0].y, path[path.length - 1].x, path[path.length - 1].y, lineWidth, begin, end, beginSize, endSize)
-    }
+    // if(begin != 'none' || end != 'none'){
+    //
+    //   beginSize = this.sizes(beginSize)
+    //   endSize = this.sizes(endSize)
+    //
+    //   lineWidth = parseInt(lineWidth)
+    //   ctx.lineCap = lineCap;
+    //   ctx.lineWidth = lineWidth
+    //   ctx.strokeStyle = strokeStyle
+    //   ctx.fillStyle = strokeStyle
+    //   ctx.globalAlpha = alpha
+    //
+    //   this._drawEndPoint(ctx, path[0].x, path[0].y, path[path.length - 1].x, path[path.length - 1].y, lineWidth, begin, end, beginSize, endSize)
+    // }
 
     if(path.length <= 1)
       return;
