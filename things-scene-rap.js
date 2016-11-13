@@ -31,9 +31,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _scene = scene,
-    Component = _scene.Component,
-    Polyline = _scene.Polyline;
+var _scene = scene;
+var Component = _scene.Component;
+var Polyline = _scene.Polyline;
 
 
 var NATURE = {
@@ -73,219 +73,42 @@ var RAP = function (_Polyline) {
   function RAP() {
     _classCallCheck(this, RAP);
 
-    return _possibleConstructorReturn(this, (RAP.__proto__ || Object.getPrototypeOf(RAP)).apply(this, arguments));
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(RAP).apply(this, arguments));
   }
 
   _createClass(RAP, [{
-    key: '_draw',
-    value: function _draw(ctx) {
-      var _model = this.model,
-          _model$alpha = _model.alpha,
-          alpha = _model$alpha === undefined ? 1 : _model$alpha,
-          _model$path = _model.path,
-          path = _model$path === undefined ? [] : _model$path,
-          direction = _model.direction,
-          _model$begin = _model.begin,
-          begin = _model$begin === undefined ? 'oval' : _model$begin,
-          _model$end = _model.end,
-          end = _model$end === undefined ? 'oval' : _model$end,
-          _model$beginSize = _model.beginSize,
-          beginSize = _model$beginSize === undefined ? 'size5' : _model$beginSize,
-          _model$endSize = _model.endSize,
-          endSize = _model$endSize === undefined ? 'size5' : _model$endSize,
-          _model$lineWidth = _model.lineWidth,
-          lineWidth = _model$lineWidth === undefined ? 2 : _model$lineWidth,
-          _model$lineCap = _model.lineCap,
-          lineCap = _model$lineCap === undefined ? false : _model$lineCap,
-          _model$strokeStyle = _model.strokeStyle,
-          strokeStyle = _model$strokeStyle === undefined ? '#000' : _model$strokeStyle;
-
-      // 양 끝 라인 그리기.
-      // if(begin != 'none' || end != 'none'){
-      //
-      //   beginSize = this.sizes(beginSize)
-      //   endSize = this.sizes(endSize)
-      //
-      //   lineWidth = parseInt(lineWidth)
-      //   ctx.lineCap = lineCap;
-      //   ctx.lineWidth = lineWidth
-      //   ctx.strokeStyle = strokeStyle
-      //   ctx.fillStyle = strokeStyle
-      //   ctx.globalAlpha = alpha
-      //
-      //   this._drawEndPoint(ctx, path[0].x, path[0].y, path[path.length - 1].x, path[path.length - 1].y, lineWidth, begin, end, beginSize, endSize)
-      // }
-
-      if (path.length <= 1) return;
-
-      ctx.beginPath();
-      ctx.globalAlpha = alpha;
-
-      ctx.moveTo(path[0].x, path[0].y);
-      if (direction == 'h') ctx.lineTo(path[1].x, path[0].y);else ctx.lineTo(path[0].x, path[1].y);
-
-      for (var i = 1; i < path.length - 1; i++) {
-        ctx.lineTo(path[i].x, path[i].y);
-        if (direction == 'h') ctx.lineTo(path[i + 1].x, path[i].y);else ctx.lineTo(path[i].x, path[i + 1].y);
-      }
-      ctx.lineTo(path[i].x, path[i].y);
-
-      this.drawStroke(ctx);
-    }
-  }, {
-    key: 'contains',
-    value: function contains(x, y) {
-      var _model2 = this.model,
-          path = _model2.path,
-          direction = _model2.direction;
-
-      var result = false;
-
-      path.forEach(function (p, idx) {
-        var j = (idx + path.length + 1) % path.length;
-
-        var x1 = p.x;
-        var y1 = p.y;
-        var x3 = path[j].x;
-        var y3 = path[j].y;
-        var x2 = direction == 'h' ? x3 : x1;
-        var y2 = direction == 'h' ? y1 : y3;
-
-        if (y1 > y != y2 > y && x < (x2 - x1) * (y - y1) / (y2 - y1) + x1) result = !result;
-
-        if (y2 > y != y3 > y && x < (x3 - x2) * (y - y2) / (y3 - y2) + x2) result = !result;
-      });
-
-      return result;
-    }
-  }, {
-    key: 'isLine',
-    value: function isLine() {
-      return true;
-    }
-  }, {
-    key: '_drawEndPoint',
-    value: function _drawEndPoint(ctx, x1, y1, x2, y2, lineWidth, beginType, endType, beginSize, endSize) {
-      var theta = Math.atan2(y2 - y1, x2 - x1);
-
-      if (beginType) this._drawArrow(ctx, beginType, x1, y1, theta, lineWidth, beginSize);
-
-      if (endType) this._drawArrow(ctx, endType, x2, y2, theta + Math.PI, lineWidth, endSize);
-    }
-  }, {
-    key: '_drawArrow',
-    value: function _drawArrow(ctx, type, x, y, theta, lineWidth, size) {
-
-      ctx.beginPath();
-
-      ctx.translate(x, y);
-      ctx.rotate(theta);
-
-      switch (type) {
-        case 'oval':
-          ctx.ellipse(0, 0, size.X, size.Y, 0, 0, 2 * Math.PI);
-          ctx.fill();
-          // ctx.scale(1, 1 / arc_scale_y)
-          break;
-        case 'diamond':
-          ctx.moveTo(-size.X, 0);
-          ctx.lineTo(0, -size.Y);
-          ctx.lineTo(size.X, 0);
-          ctx.lineTo(0, size.Y);
-          ctx.fill();
-          break;
-        case 'arrow':
-          ctx.moveTo(0, 0);
-          ctx.lineTo(WING_FACTOR * size.X, -size.Y);
-          ctx.lineTo(WING_FACTOR * size.X, size.Y);
-          ctx.fill();
-          break;
-        case 'sharp-arrow':
-          ctx.moveTo(0, 0);
-          ctx.lineTo(WING_FACTOR * size.X, -size.Y);
-          ctx.lineTo(-size.X / 1.5 + WING_FACTOR * size.X, 0);
-          ctx.lineTo(WING_FACTOR * size.X, size.Y);
-          ctx.fill();
-          break;
-        case 'open-arrow':
-          ctx.moveTo(WING_FACTOR * size.X + lineWidth, -size.Y);
-          ctx.lineTo(lineWidth, 0);
-          ctx.lineTo(WING_FACTOR * size.X + lineWidth, size.Y);
-          ctx.stroke();
-          break;
-        default:
-          break;
-      }
-
-      ctx.rotate(-theta);
-      ctx.translate(-x, -y);
-
-      ctx.closePath();
-    }
-  }, {
-    key: 'sizes',
-    value: function sizes(size) {
-      var length = {};
-      var lineWidth = this.model.lineWidth * 1.2;
-
-      switch (size) {
-        case 'size1':
-          length.X = lineWidth;
-          length.Y = lineWidth;
-          break;
-        case 'size2':
-          length.X = lineWidth * 1.5;
-          length.Y = lineWidth;
-          break;
-        case 'size3':
-          length.X = lineWidth * 2;
-          length.Y = lineWidth;
-          break;
-        case 'size4':
-          length.X = lineWidth;
-          length.Y = lineWidth * 1.5;
-          break;
-        case 'size5':
-          length.X = lineWidth * 1.5;
-          length.Y = lineWidth * 1.5;
-          break;
-        case 'size6':
-          length.X = lineWidth * 2;
-          length.Y = lineWidth * 1.5;
-          break;
-        case 'size7':
-          length.X = lineWidth;
-          length.Y = lineWidth * 2;
-          break;
-        case 'size8':
-          length.X = lineWidth * 1.5;
-          length.Y = lineWidth * 2;
-          break;
-        case 'size9':
-          length.X = lineWidth * 2;
-          length.Y = lineWidth * 2;
-          break;
-        default:
-          length.X = lineWidth * 1.5;
-          length.Y = lineWidth * 1.5;
-          break;
-      }
-      return length;
-    }
-  }, {
-    key: 'pathExtendable',
+    key: 'drawPath',
     get: function get() {
-      return true;
+      var _model = this.model;
+      var path = _model.path;
+      var direction = _model.direction;
+
+      var drawPath = [];
+
+      for (var idx = 0; idx < path.length - 1; idx++) {
+        var p = path[idx];
+        var q = path[idx + 1];
+
+        drawPath.push(p);
+        drawPath.push({
+          x: direction == 'h' ? q.x : p.x,
+          y: direction == 'h' ? p.y : q.y
+        });
+      }
+
+      drawPath.push(path[path.length - 1]);
+
+      return drawPath;
     }
   }, {
     key: 'controls',
     get: function get() {
 
       // 폴리라인에서의 control은 새로운 path를 추가하는 포인트이다.
-      var _model3 = this.model,
-          _model3$path = _model3.path,
-          path = _model3$path === undefined ? [] : _model3$path,
-          direction = _model3.direction;
+      var _model2 = this.model;
+      var _model2$path = _model2.path;
+      var path = _model2$path === undefined ? [] : _model2$path;
+      var direction = _model2.direction;
 
       var controls = [];
 
@@ -334,6 +157,7 @@ exports.default = RAP;
 
 
 Component.memoize(RAP.prototype, 'controls', false);
+Component.memoize(RAP.prototype, 'drawPath', false);
 
 Component.register('rap', RAP);
 
