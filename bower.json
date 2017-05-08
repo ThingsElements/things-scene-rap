@@ -1,7 +1,7 @@
 {
   "name": "things-scene-rap",
 
-  "version": "2.0.0",
+  "version": "2.0.1",
 
   "authors": [
     "Hatio Lab. <heartyoh@hatiolab.com>"
@@ -19,9 +19,7 @@
     "/.*",
     "/test/"
   ],
-  "dependencies": {
-    "things-scene": "^2.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "polymer": "Polymer/polymer#^1.2.0",
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
